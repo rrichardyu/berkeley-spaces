@@ -21,7 +21,7 @@ def fetch_rooms():
         'compsubject': 'location',
         'page': '1',
         'page_size': '250',
-        'obj_cache_accl': '1',
+        'obj_cache_accl': '0',
         'query_id': '2195',
         'caller': 'pro-ListService.getData',
     }
@@ -54,6 +54,7 @@ def update_classrooms(sql_engine, table_name):
             "building_name_internal": building_name_internal, 
             "room_number": room_number,  
             "room_name_display": room_name_display, 
+            "room_capacity": room_capacity, 
             "room_categories": room_categories, 
             "room_features": room_features
         })
