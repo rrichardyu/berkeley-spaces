@@ -59,6 +59,9 @@ def update_classrooms(sql_engine, table_name):
             "room_features": room_features
         })
 
-    df = pd.DataFrame(collected)
+    print("Processed updated classroom data")
 
+    df = pd.DataFrame(collected)
     df.to_sql(table_name, sql_engine, index=False, if_exists="replace")
+
+    return df

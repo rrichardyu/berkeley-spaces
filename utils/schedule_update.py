@@ -70,13 +70,15 @@ def update_room_schedules(sql_engine, table_name):
                     "room_id": room_id,
                     "event_id": reservation["event_id"],
                     "event_name": reservation["event_name"],
-                    "date": date,
+                    "date": datetime.fromisoformat(date),
+                    "day_id": datetime.fromisoformat(date).weekday() + 1,
                     "start_dt": datetime.fromisoformat(reservation["rsrv_start_dt"]),
                     "end_dt": datetime.fromisoformat(reservation["rsrv_end_dt"]),
                 })
 
         schedule_df = pd.concat([schedule_df, pd.DataFrame(collected)], ignore_index=True)
         collected = []
-        print(f"Processed room {room_id}")
+        print(f"Processed room schedule {room_id}")
 
     schedule_df.to_sql(table_name, sql_engine, index=False, if_exists="replace")
+    return schedule_df
