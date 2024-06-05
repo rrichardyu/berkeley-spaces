@@ -1,5 +1,6 @@
 import requests
-import pandas as pd
+from models import Room, Building, Category, Feature
+from sqlalchemy.exc import SQLAlchemyError
 
 def fetch_rooms():
     headers = {
@@ -38,9 +39,8 @@ def fetch_rooms():
     else:
         print(f"Request failed with status code {response.status_code}")
 
-def update_classrooms(sql_engine, table_name):
+def update_classrooms(session):
     data = fetch_rooms()
-    collected = []
 
     for i in range(data["rows"][0]["count"]):
         room_data = data["rows"][i]["row"]
@@ -48,20 +48,49 @@ def update_classrooms(sql_engine, table_name):
         room_name_display, room_categories, room_features, room_capacity = room_data[1], room_data[2], room_data[3], room_data[5]
         building_name_internal, room_number = room_name_internal[:4], room_name_internal[4:]
 
-        collected.append({
-            "room_id": room_id, 
-            "room_name_internal": room_name_internal,
-            "building_name_internal": building_name_internal, 
-            "room_number": room_number,  
-            "room_name_display": room_name_display, 
-            "room_capacity": room_capacity, 
-            "room_categories": room_categories, 
-            "room_features": room_features
-        })
+        building_name = room_name_display.split(", ")[0]
+        existing_building = session.query(Building).filter_by(display_name=building_name).first()
 
-    print("Processed updated classroom data")
+        categories = []
+        for category_name in room_categories.split(", "):
+            existing_category = session.query(Category).filter_by(name=category_name).first()
+            if existing_category:
+                categories.append(existing_category)
+            else:
+                new_category = Category(name=category_name)
+                categories.append(new_category)
 
-    df = pd.DataFrame(collected)
-    df.to_sql(table_name, sql_engine, index=False, if_exists="replace")
+        features = []
+        for feature_name in room_features.split(", "):
+            existing_feature = session.query(Feature).filter_by(name=feature_name).first()
+            if existing_feature:
+                features.append(existing_feature)
+            else:
+                new_feature = Feature(name=feature_name)
+                features.append(new_feature)
 
-    return df
+        if existing_building:
+            new_building = existing_building
+        else:
+            new_building = Building(display_name=building_name, internal_name=building_name_internal)
+
+        new_room = Room(
+            id = room_id,
+            display_name=room_name_display, 
+            number=room_number, 
+            capacity=room_capacity,
+            building=new_building,
+            categories=categories,
+            features=features
+        )
+        
+        session.add(new_room)
+        
+    try:
+        session.commit()
+        print("Room data updated")
+    except SQLAlchemyError as e:
+        session.rollback()
+        print("Failed to add new rooms:", str(e))
+
+    session.close()

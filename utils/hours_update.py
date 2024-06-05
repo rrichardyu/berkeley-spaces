@@ -1,6 +1,7 @@
 import requests
 from datetime import datetime
-import pandas as pd
+from models import Room, Hours
+from sqlalchemy.exc import SQLAlchemyError
 
 def fetch_room_hours(room_id):
     headers = {
@@ -45,28 +46,33 @@ def fetch_room_hours(room_id):
     else:
         print(f"Request failed with status code {response.status_code}")
 
-def update_room_hours(sql_engine, table_name):
-    rooms_df = pd.read_sql("rooms", sql_engine)
-    room_ids = rooms_df["room_id"]
-    collected = []
+def update_room_hours(session):
+    room_ids_raw = session.query(Room.id).all()
+    room_ids = [room_id for (room_id,) in room_ids_raw]
 
     for room_id in room_ids:
         data = fetch_room_hours(room_id)
         hours_data = data["spaces"]["space"]["hours"]
 
+        existing_room = session.get(Room, room_id)
+
         for weekday in hours_data:
             day_id, day_name, room_open_time, room_close_time = weekday["day_id"], weekday["day_name"], weekday["open"], weekday["close"]
 
-            collected.append({
-                "room_id": room_id,
-                "day_id": day_id,
-                "day_name": day_name,
-                "open_t": datetime.strptime(room_open_time, '%H:%M:%S').time(),
-                "close_t": datetime.strptime(room_close_time, '%H:%M:%S').time(),
-            })
+            hours_entry = Hours(
+                day_id=day_id,
+                day_name=day_name,
+                open_t=datetime.strptime(room_open_time, '%H:%M:%S').time(),
+                close_t=datetime.strptime(room_close_time, '%H:%M:%S').time(),
+                room=existing_room
+            )
+            session.add(hours_entry)
 
         print(f"Processed room hours {room_id}")
 
-    hours_df = pd.DataFrame(collected)
-    hours_df.to_sql(table_name, sql_engine, index=False, if_exists="replace")
-    return hours_df
+    try:
+        session.commit()
+        print("Room hours updated")
+    except SQLAlchemyError as e:
+        session.rollback()
+        print("Failed to add new rooms:", str(e))

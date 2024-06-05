@@ -1,10 +1,16 @@
-import sqlalchemy
+from models import Base
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from room_update import update_classrooms
 from schedule_update import update_room_schedules
 from hours_update import update_room_hours
 
-db_engine = sqlalchemy.create_engine("postgresql://postgres:cal@localhost:5432")
+db_engine = create_engine("postgresql://postgres:cal@localhost:5432")
+Base.metadata.create_all(db_engine)
 
-rooms_df = update_classrooms(db_engine, "rooms")
-schedule_df = update_room_schedules(db_engine, "schedule")
-hours_df = update_room_hours(db_engine, "hours")
+Session = sessionmaker(bind=db_engine)
+session = Session()
+
+update_classrooms(session)
+update_room_schedules(session)
+update_room_hours(session)

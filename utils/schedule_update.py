@@ -1,6 +1,7 @@
 import requests
+from models import Room, Schedule
 from datetime import datetime, timedelta
-import pandas as pd
+from sqlalchemy.exc import SQLAlchemyError
 
 def get_one_month_interval():
     date_interval = [datetime.now() - timedelta(days=30), datetime.now() + timedelta(days=30)]
@@ -49,36 +50,39 @@ def fetch_room_schedule(room_id, start_date, end_date):
     else:
         print(f"Request failed with status code {response.status_code}")
 
-def update_room_schedules(sql_engine, table_name):
+def update_room_schedules(session):
     start_date, end_date = get_one_month_interval()
-    rooms_df = pd.read_sql("rooms", sql_engine)
-    room_ids = rooms_df["room_id"]
-    schedule_df = pd.DataFrame()
+    room_ids_raw = session.query(Room.id).all()
+    room_ids = [room_id for (room_id,) in room_ids_raw]
 
     for room_id in room_ids:
         data = fetch_room_schedule(room_id, start_date, end_date)
         all_dates = data["root"]["events"]
         reserved_dates = [all_dates[i] for i in range(len(all_dates)) if "rsrv" in all_dates[i].keys()]
-        collected = []
+
+        existing_room = session.get(Room, room_id)
 
         for date_data in reserved_dates:
             date = date_data["date"]
             reservations = date_data["rsrv"]
 
             for reservation in reservations:
-                collected.append({
-                    "room_id": room_id,
-                    "event_id": reservation["event_id"],
-                    "event_name": reservation["event_name"],
-                    "date": datetime.fromisoformat(date),
-                    "day_id": datetime.fromisoformat(date).weekday() + 1,
-                    "start_dt": datetime.fromisoformat(reservation["rsrv_start_dt"]),
-                    "end_dt": datetime.fromisoformat(reservation["rsrv_end_dt"]),
-                })
+                schedule_entry = Schedule(
+                    event_id=reservation["event_id"],
+                    event_name=reservation["event_name"],
+                    event_date=datetime.fromisoformat(date),
+                    day_id=datetime.fromisoformat(date).weekday() + 1,
+                    start_t=datetime.fromisoformat(reservation["rsrv_start_dt"]).time(),
+                    end_t=datetime.fromisoformat(reservation["rsrv_end_dt"]).time(),
+                    room=existing_room
+                )
+                session.add(schedule_entry)
 
-        schedule_df = pd.concat([schedule_df, pd.DataFrame(collected)], ignore_index=True)
-        collected = []
         print(f"Processed room schedule {room_id}")
-
-    schedule_df.to_sql(table_name, sql_engine, index=False, if_exists="replace")
-    return schedule_df
+    
+    try:
+        session.commit()
+        print("Room schedules updated")
+    except SQLAlchemyError as e:
+        session.rollback()
+        print("Failed to add new rooms:", str(e))
