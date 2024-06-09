@@ -65,10 +65,29 @@ export default function Filters({ availableFilters, filterUpdate }) {
                 <Dropdown dropdownText="End" options={[]} selectDropdownItem={setEndTime} />
             </div>
             <Calendar onDateClick={setDate} />
-            <Dropdown dropdownText="Buildings" allowMultipleSelect={true} options={availableFilters.buildings.map(building => building.display_name)} selectDropdownItem={setBuildings} />
-            <Dropdown dropdownText="Features" allowMultipleSelect={true} options={availableFilters.features} selectDropdownItem={setFeatures} />
-            <Dropdown dropdownText="Categories" allowMultipleSelect={true} options={availableFilters.categories} selectDropdownItem={setCategories} />
-            <Dropdown dropdownText="Status" options={["Unreserved", "Reserved", "Closed"]} selectDropdownItem={setStatus} />
+            <Dropdown 
+                dropdownText="Buildings" 
+                allowMultipleSelect={true} 
+                options={availableFilters.buildings.map(building => ({ display: building.display_name, value: building.internal_name }))} 
+                selectDropdownItem={setBuildings} 
+            />
+            <Dropdown 
+                dropdownText="Features" 
+                allowMultipleSelect={true} 
+                options={availableFilters.features.map(feature => ({ display: feature.display_name, value: feature.internal_name }))} 
+                selectDropdownItem={setFeatures} 
+            />
+            <Dropdown 
+                dropdownText="Categories" 
+                allowMultipleSelect={true} 
+                options={availableFilters.categories.map(category => ({ display: category.display_name, value: category.internal_name }))} 
+                selectDropdownItem={setCategories} 
+            />
+            <Dropdown 
+                dropdownText="Status" 
+                options={["Unreserved", "Reserved", "Closed"].map(status => ({ display: status, value: status }))} 
+                selectDropdownItem={setStatus} 
+            />
         </div>
     );
 }
