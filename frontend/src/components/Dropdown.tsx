@@ -57,8 +57,11 @@ export default function Dropdown({ dropdownText, options, selectDropdownItem }: 
             </svg>
         </button>
         {isOpen && (
-            <div className="absolute w-full mt-2 bg-white border rounded shadow-lg z-10">
+            <div className="absolute w-full mt-2 bg-white border rounded shadow-lg z-10 max-h-64 overflow-y-auto">
             <ul>
+                <li key="default" className="px-2 py-2 text-gray-400 cursor-pointer" onClick={() => handleOptionClick(null)}>
+                    {dropdownText}
+                </li>
                 {options.map((option, index) => (
                     <li 
                         key={index} 
