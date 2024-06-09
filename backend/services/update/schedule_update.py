@@ -1,5 +1,5 @@
 import requests
-from models import Room, Schedule
+from backend.models import Room, Schedule
 from datetime import datetime, timedelta
 from sqlalchemy.exc import SQLAlchemyError
 

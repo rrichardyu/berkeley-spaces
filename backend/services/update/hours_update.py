@@ -1,6 +1,6 @@
 import requests
 from datetime import datetime
-from models import Room, Hours
+from backend.models import Room, Hours
 from sqlalchemy.exc import SQLAlchemyError
 
 def fetch_room_hours(room_id):
