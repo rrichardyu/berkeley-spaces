@@ -76,9 +76,9 @@ export default function Filters({ data, filterUpdate }) {
                 <Dropdown dropdownText="End" options={[]} selectDropdownItem={setEndTime} />
             </div>
             <Calendar onDateClick={setDate} />
-            <Dropdown dropdownText="Buildings" options={filtersLoaded ? filters.buildings.map(building => building.display_name) : []} selectDropdownItem={setBuildings} />
-            <Dropdown dropdownText="Features" options={filtersLoaded ? filters.features : []} selectDropdownItem={setFeatures} />
-            <Dropdown dropdownText="Categories" options={filtersLoaded ? filters.categories : []} selectDropdownItem={setCategories} />
+            <Dropdown dropdownText="Buildings" allowMultipleSelect={true} options={filtersLoaded ? filters.buildings.map(building => building.display_name) : []} selectDropdownItem={setBuildings} />
+            <Dropdown dropdownText="Features" allowMultipleSelect={true} options={filtersLoaded ? filters.features : []} selectDropdownItem={setFeatures} />
+            <Dropdown dropdownText="Categories" allowMultipleSelect={true} options={filtersLoaded ? filters.categories : []} selectDropdownItem={setCategories} />
             <Dropdown dropdownText="Status" options={["Unreserved", "Reserved", "Closed"]} selectDropdownItem={setStatus} />
         </div>
     );
