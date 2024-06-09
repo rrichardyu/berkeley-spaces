@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from typing import Annotated
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine
 from backend.services.query.query import query_room
@@ -34,9 +35,26 @@ async def get_filters():
     pass
 
 @app.get("/rooms")
-async def get_rooms(start_t: str = None, end_t: str = None, buildings: str = None, categories: str = None, features: str = None, status: str = None):
+async def get_rooms(
+    start_t: str = None, 
+    end_t: str = None, 
+    buildings: str = None, 
+    categories: str = None, 
+    features: str = None, 
+    status: str = None
+):
     return search(session, start_t=start_t, end_t=end_t, buildings=buildings, categories=categories, features=features, status=status)
 
 @app.get("/rooms/{room_id}")
 async def get_room_data(room_id: int):
     return query_room(session, room_id)
+
+@app.get("/sequential_rooms")
+async def get_sequential_rooms(
+    start_t: str, end_t: str,
+    buildings: Annotated[list[str] | None, Query()] = None,
+    categories: Annotated[list[str] | None, Query()] = None,
+    features: Annotated[list[str] | None, Query()] = None
+):
+    output = find_sequential_rooms(session, start_t, end_t, buildings=buildings, categories=categories, features=features)
+    return output if output else []
