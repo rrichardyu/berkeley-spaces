@@ -1,8 +1,4 @@
-import sqlalchemy
-from sqlalchemy.orm import sessionmaker, aliased
-from datetime import datetime
-
-from backend.models import Room, Schedule, Hours, Feature, RoomFeature
+from backend.models import Room, Schedule, Feature, RoomFeature
 
 def query_room(session, room_id):
     try:

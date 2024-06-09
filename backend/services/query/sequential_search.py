@@ -1,5 +1,3 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timedelta
 from queue import Queue
 import random
@@ -122,7 +120,11 @@ def find_sequential_rooms(session, start_time: str, end_time: str, buildings: li
                 if output[i][0] != output[i-1][1] + timedelta(minutes=1):
                     valid = False
             if valid and output[-1][1] == end_time:
-                return output
+                return [{
+                    "start_t": start_t,
+                    "end_t": end_t,
+                    "room": room
+                } for start_t, end_t, room in output]
             
         print(queue.queue)
             

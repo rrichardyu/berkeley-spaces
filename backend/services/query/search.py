@@ -1,7 +1,6 @@
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy import and_, case, or_
 from datetime import datetime
-from sqlalchemy import create_engine, func
+from sqlalchemy import func
 from backend.models import Room, Schedule, Hours, Category, Feature, Building
 
 def search(session, start_t=None, end_t=None, buildings=None, categories=None, features=None, status=None):
