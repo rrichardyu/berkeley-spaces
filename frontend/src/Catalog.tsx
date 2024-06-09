@@ -36,7 +36,17 @@ export default function Catalog() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const queryParamsString = new URLSearchParams(filters).toString();
+                let params = new URLSearchParams();
+
+                for(let key in filters) {
+                    if(Array.isArray(filters[key])) {
+                        filters[key].forEach(value => params.append(key, value));
+                    } else {
+                        params.append(key, filters[key]);
+                    }
+                }
+
+                const queryParamsString = params.toString();
                 const response = await fetch(`http://localhost:8000/rooms?${queryParamsString}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error ${response.status}`);

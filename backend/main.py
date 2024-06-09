@@ -5,6 +5,7 @@ from sqlalchemy import create_engine
 from backend.services.query.query import query_room
 from backend.services.query.sequential_search import find_sequential_rooms
 from backend.services.query.search import search
+from backend.services.query.filters import filters
 from sqlalchemy.orm import sessionmaker
 
 app = FastAPI()
@@ -32,17 +33,18 @@ async def root():
 
 @app.get("/filters")
 async def get_filters():
-    pass
+    return filters(session)
 
 @app.get("/rooms")
 async def get_rooms(
     start_t: str = None, 
     end_t: str = None, 
-    buildings: str = None, 
-    categories: str = None, 
-    features: str = None, 
+    buildings: Annotated[list[str] | None, Query()] = None, 
+    categories: Annotated[list[str] | None, Query()] = None, 
+    features: Annotated[list[str] | None, Query()] = None, 
     status: str = None
 ):
+    print(start_t, end_t, buildings, categories, features, status)
     return search(session, start_t=start_t, end_t=end_t, buildings=buildings, categories=categories, features=features, status=status)
 
 @app.get("/rooms/{room_id}")

@@ -45,7 +45,7 @@ export default function Dropdown({ dropdownText, options, selectDropdownItem, al
 
     const resetDropdown = () => {
         setSelectedDropdownItems([]);
-        selectDropdownItem(null);
+        selectDropdownItem([]);
         setIsOpen(false);
     }
 

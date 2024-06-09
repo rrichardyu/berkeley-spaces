@@ -6,9 +6,9 @@ export default function Filters({ availableFilters, filterUpdate }) {
     const [startTime, setStartTime] = useState("")
     const [endTime, setEndTime] = useState("")
     const [date, setDate] = useState(new Date())
-    const [buildings, setBuildings] = useState("")
-    const [features, setFeatures] = useState("")
-    const [categories, setCategories] = useState("")
+    const [buildings, setBuildings] = useState([])
+    const [features, setFeatures] = useState([])
+    const [categories, setCategories] = useState([])
     const [status, setStatus] = useState("")
 
     // const uniqueBuildings = [...new Set(data.map(obj => obj.room_name_display.split(",")[0]))].sort();
@@ -18,9 +18,9 @@ export default function Filters({ availableFilters, filterUpdate }) {
         startTime: "",
         endTime: "",
         date: new Date(),
-        buildings: "",
-        features: "",
-        type: "",
+        buildings: [],
+        features: [],
+        categories: [],
         status: ""
     });
 
@@ -31,6 +31,7 @@ export default function Filters({ availableFilters, filterUpdate }) {
             prevFilterState.current.date !== date ||
             prevFilterState.current.buildings !== buildings ||
             prevFilterState.current.features !== features ||
+            prevFilterState.current.categories !== categories ||
             prevFilterState.current.status !== status
         ) {
             filterUpdate({
@@ -39,6 +40,7 @@ export default function Filters({ availableFilters, filterUpdate }) {
                 date,
                 buildings,
                 features,
+                categories,
                 status
             });
 
@@ -48,10 +50,11 @@ export default function Filters({ availableFilters, filterUpdate }) {
                 date,
                 buildings,
                 features,
+                categories,
                 status
             };
         }
-    }, [startTime, endTime, date, buildings, features, status, filterUpdate]);
+    }, [startTime, endTime, date, buildings, features, status, filterUpdate, categories]);
 
     return (
         <div className="w-full">
