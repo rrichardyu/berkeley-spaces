@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Calendar from "./Calendar";
 import Dropdown from "./Dropdown";
 
-export default function Filters({ data, filterUpdate }) {
+export default function Filters({ availableFilters, filterUpdate }) {
     const [startTime, setStartTime] = useState("")
     const [endTime, setEndTime] = useState("")
     const [date, setDate] = useState(new Date())
@@ -11,11 +11,8 @@ export default function Filters({ data, filterUpdate }) {
     const [categories, setCategories] = useState("")
     const [status, setStatus] = useState("")
 
-    const [filters, setFilters] = useState(null);
-    const [filtersLoaded, setFiltersLoaded] = useState(false);
-
     // const uniqueBuildings = [...new Set(data.map(obj => obj.room_name_display.split(",")[0]))].sort();
-    const uniqueStatuses = [...new Set(data.map(obj => obj.reservation_status))];
+    // const uniqueStatuses = [...new Set(data.map(obj => obj.reservation_status))];
 
     const prevFilterState = useRef({
         startTime: "",
@@ -55,17 +52,6 @@ export default function Filters({ data, filterUpdate }) {
             };
         }
     }, [startTime, endTime, date, buildings, features, status, filterUpdate]);
-    
-    useEffect(() => {
-        fetch("http://localhost:8000/filters")
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setFilters(data);
-                setFiltersLoaded(true);
-            })
-            .catch(err => console.error(err));
-    }, [])
 
     return (
         <div className="w-full">
@@ -76,9 +62,9 @@ export default function Filters({ data, filterUpdate }) {
                 <Dropdown dropdownText="End" options={[]} selectDropdownItem={setEndTime} />
             </div>
             <Calendar onDateClick={setDate} />
-            <Dropdown dropdownText="Buildings" allowMultipleSelect={true} options={filtersLoaded ? filters.buildings.map(building => building.display_name) : []} selectDropdownItem={setBuildings} />
-            <Dropdown dropdownText="Features" allowMultipleSelect={true} options={filtersLoaded ? filters.features : []} selectDropdownItem={setFeatures} />
-            <Dropdown dropdownText="Categories" allowMultipleSelect={true} options={filtersLoaded ? filters.categories : []} selectDropdownItem={setCategories} />
+            <Dropdown dropdownText="Buildings" allowMultipleSelect={true} options={availableFilters.buildings.map(building => building.display_name)} selectDropdownItem={setBuildings} />
+            <Dropdown dropdownText="Features" allowMultipleSelect={true} options={availableFilters.features} selectDropdownItem={setFeatures} />
+            <Dropdown dropdownText="Categories" allowMultipleSelect={true} options={availableFilters.categories} selectDropdownItem={setCategories} />
             <Dropdown dropdownText="Status" options={["Unreserved", "Reserved", "Closed"]} selectDropdownItem={setStatus} />
         </div>
     );
