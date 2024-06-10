@@ -18,50 +18,23 @@ export default function Preferences({ availablePreferences, preferenceUpdate }) 
     const [features, setFeatures] = useState([])
     const [categories, setCategories] = useState([])
 
-    const prevFilterState = useRef({
-        start_t: "",
-        end_t: "",
-        date: date,
-        buildings: [],
-        features: [],
-        categories: [],
-    });
-
-    useEffect(() => {
-        if (
-            prevFilterState.current.start_t !== start_t ||
-            prevFilterState.current.end_t !== end_t ||
-            prevFilterState.current.date !== date ||
-            prevFilterState.current.buildings !== buildings ||
-            prevFilterState.current.features !== features ||
-            prevFilterState.current.categories !== categories
-        ) {
-            preferenceUpdate({
-                start_t,
-                end_t,
-                date,
-                buildings,
-                features,
-                categories,
-            });
-
-            prevFilterState.current = {
-                start_t,
-                end_t,
-                date,
-                buildings,
-                features,
-                categories,
-            };
-        }
-    }, [start_t, end_t, date, buildings, features, preferenceUpdate, categories]);
-
     const times = Array.from({ length: 24 }, (_, i) => {
         const hour = i % 12 || 12;
         const ampm = i < 12 ? "AM" : "PM";
         const displayValue = `${hour.toString()}:00 ${ampm}`;
         return { display_value: displayValue, internal_value: displayValue };
     });
+
+    const handleSearch = () => {
+        preferenceUpdate({
+            start_t,
+            end_t,
+            date,
+            buildings,
+            features,
+            categories,
+        })
+    }
 
     return (
         <div className="w-full">
@@ -90,6 +63,9 @@ export default function Preferences({ availablePreferences, preferenceUpdate }) 
                 options={availablePreferences.categories.map(category => ({ display: category.display_name, value: category.internal_name }))} 
                 selectDropdownItem={setCategories} 
             />
+            <button onClick={handleSearch} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded border transition-colors">
+                Search
+            </button>
         </div>
     );
 }
