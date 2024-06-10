@@ -26,6 +26,11 @@ export default function Preferences({ availablePreferences, preferenceUpdate }) 
     });
 
     const handleSearch = () => {
+        if (!start_t.length || !end_t.length) {
+            alert("Please select a start and end time.")
+            return
+        }
+
         preferenceUpdate({
             start_t,
             end_t,

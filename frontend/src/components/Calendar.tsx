@@ -51,7 +51,7 @@ const Calendar: React.FC<CalendarProps> = ({ onDateClick }) => {
 
     return (
         <div className="calendar">
-            <div className="calendar-header flex justify-between items-center mb-4">
+            <div className="calendar-header flex justify-between items-center mb-2">
                 <h2 className="text-lg font-bold">
                     {currentDate.toLocaleString('default', { month: 'long' })} {currentDate.getFullYear()}
                 </h2>
@@ -65,15 +65,6 @@ const Calendar: React.FC<CalendarProps> = ({ onDateClick }) => {
                 </div>
             </div>
             <div className="calendar-body">
-                <div className="calendar-weekdays grid grid-cols-7 gap-2 mb-2">
-                    <div className="text-center">Sun</div>
-                    <div className="text-center">Mon</div>
-                    <div className="text-center">Tue</div>
-                    <div className="text-center">Wed</div>
-                    <div className="text-center">Thu</div>
-                    <div className="text-center">Fri</div>
-                    <div className="text-center">Sat</div>
-                </div>
                 <div className="calendar-days grid grid-cols-7 gap-1 text-center bg-gray-200 rounded p-2 place-items-center">
                     {renderCalendar()}
                 </div>
