@@ -1,16 +1,20 @@
 from sqlalchemy import and_, case, or_
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy import func
 from backend.models import Room, Schedule, Hours, Category, Feature, Building
 
-def search(session, start_t=None, end_t=None, buildings=None, categories=None, features=None, status=None):
+def search(session, start_t=None, end_t=None, date=None, buildings=None, categories=None, features=None, status=None):
     today_day_id = datetime.now().isoweekday()
     current_time = func.current_time()
+    current_date = func.current_date()
+
+    if date:
+        current_date = datetime.strptime(date, '%Y-%m-%d').date()
 
     if start_t and end_t:
-        if type(start_t) == str:
-            start_t = datetime.strptime(start_t, '%Y-%m-%d %H:%M:%S').time()
-            end_t = datetime.strptime(end_t, '%Y-%m-%d %H:%M:%S').time()
+        if type(start_t) == str and type(end_t) == str:
+            start_t = datetime.strptime(start_t.strip(), '%I:%M %p').time()
+            end_t = (datetime.strptime(end_t.strip(), '%I:%M %p') - timedelta(minutes=1)).time()
 
     query = session.query(Room)
 
@@ -50,7 +54,7 @@ def search(session, start_t=None, end_t=None, buildings=None, categories=None, f
                 ).label('reservation_status')
             ).outerjoin(Schedule, and_(
                 open_rooms_cte.c.id == Schedule.room_id,
-                Schedule.event_date == func.current_date(),
+                Schedule.event_date == current_date,
                 or_(
                     and_(
                         Schedule.start_t >= start_t,
@@ -91,7 +95,7 @@ def search(session, start_t=None, end_t=None, buildings=None, categories=None, f
                 ).label('reservation_status')
             ).outerjoin(Schedule, and_(
                 open_rooms_cte.c.id == Schedule.room_id,
-                Schedule.event_date == func.current_date(),
+                Schedule.event_date == current_date,
                 current_time.between(Schedule.start_t, Schedule.end_t)
             )).cte('ReservedRooms')
 

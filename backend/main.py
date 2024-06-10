@@ -39,13 +39,14 @@ async def get_filters():
 async def get_rooms(
     start_t: str = None, 
     end_t: str = None, 
+    date: str = None,
     buildings: Annotated[list[str] | None, Query()] = None, 
     categories: Annotated[list[str] | None, Query()] = None, 
     features: Annotated[list[str] | None, Query()] = None, 
     status: str = None
 ):
-    print(start_t, end_t, buildings, categories, features, status)
-    return search(session, start_t=start_t, end_t=end_t, buildings=buildings, categories=categories, features=features, status=status)
+    print(start_t, end_t, date, buildings, categories, features, status)
+    return search(session, start_t=start_t, end_t=end_t, date=date, buildings=buildings, categories=categories, features=features, status=status)
 
 @app.get("/rooms/{room_id}")
 async def get_room_data(room_id: int):
