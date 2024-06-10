@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import Calendar from "./ImprovedCalendar";
+import Calendar from "./Calendar";
 import Dropdown from "./Dropdown";
 
 function convertDateToString(dateObject: Date) {
