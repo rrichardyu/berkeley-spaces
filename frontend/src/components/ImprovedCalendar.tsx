@@ -38,7 +38,7 @@ const Calendar: React.FC<CalendarProps> = ({ onDateClick }) => {
         // Add cells for each day in the month
         for (let i = 1; i <= daysInMonth; i++) {
             const isSelected = i === selectedDate && currentMonth === currentDate.getMonth() && currentYear === currentDate.getFullYear();
-            const classNames = `calendar-day ${isSelected ? "selected" : ""} ${isSelected ? "bg-blue-500 text-white" : "bg-white text-black"} hover:bg-blue-200 cursor-pointer`;
+            const classNames = `calendar-day ${isSelected ? "bg-blue-500 text-white" : "text-black"} p-2 w-10 h-10 rounded-full hover:bg-gray-400 hover:text-white transition-colors cursor-pointer`;
             calendarDays.push(
                 <div key={i} className={classNames} onClick={() => handleDateClick(i)}>
                     {i}
@@ -52,9 +52,17 @@ const Calendar: React.FC<CalendarProps> = ({ onDateClick }) => {
     return (
         <div className="calendar">
             <div className="calendar-header flex justify-between items-center mb-4">
-                <button className="prev-month text-lg">&lt;</button>
-                <h3 className="text-xl font-bold">{currentDate.toLocaleString("default", { month: "long", year: "numeric" })}</h3>
-                <button className="next-month text-lg">&gt;</button>
+                <h2 className="text-lg font-bold">
+                    {currentDate.toLocaleString('default', { month: 'long' })} {currentDate.getFullYear()}
+                </h2>
+                <div className="flex">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
             </div>
             <div className="calendar-body">
                 <div className="calendar-weekdays grid grid-cols-7 gap-2 mb-2">
@@ -66,7 +74,7 @@ const Calendar: React.FC<CalendarProps> = ({ onDateClick }) => {
                     <div className="text-center">Fri</div>
                     <div className="text-center">Sat</div>
                 </div>
-                <div className="calendar-days grid grid-cols-7 gap-2">
+                <div className="calendar-days grid grid-cols-7 gap-1 text-center bg-gray-200 rounded p-2 place-items-center">
                     {renderCalendar()}
                 </div>
             </div>
