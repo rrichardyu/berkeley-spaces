@@ -87,7 +87,7 @@ export default function Catalog() {
 
     return (
         <>
-            <div className="flex h-screen">
+            <div className="flex flex-grow h-full">
                 <div className="w-1/4 p-4 border-r">
                     { filtersLoaded ?
                         <Filters availableFilters={availableFilters} filterUpdate={handleFilterUpdate} />
