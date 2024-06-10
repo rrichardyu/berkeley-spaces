@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 interface DropdownProps {
     dropdownText: string;
-    options: string[];
+    options: { display: string, value: string }[];
     selectDropdownItem: (selectedItem: string | string[]) => void;
     allowMultipleSelect?: boolean;
 }
@@ -35,10 +35,10 @@ export default function Dropdown({ dropdownText, options, selectDropdownItem, al
                 ? selectedDropdownItems.filter(item => item !== value)
                 : [...selectedDropdownItems, value];
             setSelectedDropdownItems(updatedSelectedItems);
-            selectDropdownItem(updatedSelectedItems);
+            selectDropdownItem(updatedSelectedItems.map(item => options.find(option => option.display === item)?.value));
         } else {
             setSelectedDropdownItems([value]);
-            selectDropdownItem(value);
+            selectDropdownItem(options.find(option => option.display === value)?.value || ''); // Added null check here
             setIsOpen(false);
         }
     };
@@ -79,7 +79,7 @@ export default function Dropdown({ dropdownText, options, selectDropdownItem, al
                             className={`px-2 py-2 hover:bg-gray-100 text-gray-400 cursor-pointer ${
                                 selectedDropdownItems.length === 0 ? 'bg-gray-100' : ''
                             }`}
-                            onClick={() => resetDropdown(null)}
+                            onClick={() => resetDropdown()}
                         >
                             {`${dropdownText} (click to reset)`}
                         </li>
@@ -87,11 +87,11 @@ export default function Dropdown({ dropdownText, options, selectDropdownItem, al
                             <li
                                 key={index}
                                 className={`px-2 py-2 hover:bg-gray-100 transition-colors cursor-pointer ${
-                                    selectedDropdownItems.includes(option) ? 'bg-gray-100' : ''
+                                    selectedDropdownItems.includes(option.display) ? 'bg-gray-100' : ''
                                 }`}
-                                onClick={() => handleOptionClick(option)}
+                                onClick={() => handleOptionClick(option.display)}
                             >
-                                {option}
+                                {option.display}
                             </li>
                         ))}
                     </ul>

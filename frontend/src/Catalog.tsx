@@ -13,25 +13,25 @@ export default function Catalog() {
     const [availableFilters, setAvailableFilters] = useState(null);
     const [filtersLoaded, setFiltersLoaded] = useState(false);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch(`http://127.0.0.1:8000/rooms`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error ${response.status}`);
-                }
-                const result = await response.json();
-                setAllRoomsData(result);
-                console.log(result);
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setCatalogLoading(false);
-            }
-        };
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const response = await fetch(`http://127.0.0.1:8000/rooms`);
+    //             if (!response.ok) {
+    //                 throw new Error(`HTTP error ${response.status}`);
+    //             }
+    //             const result = await response.json();
+    //             setAllRoomsData(result);
+    //             console.log(result);
+    //         } catch (error) {
+    //             console.log(error);
+    //         } finally {
+    //             setCatalogLoading(false);
+    //         }
+    //     };
     
-        fetchData();
-    }, []);
+    //     fetchData();
+    // }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -39,7 +39,7 @@ export default function Catalog() {
                 let params = new URLSearchParams();
 
                 for(let key in filters) {
-                    if(Array.isArray(filters[key])) {
+                    if (Array.isArray(filters[key])) {
                         filters[key].forEach(value => params.append(key, value));
                     } else {
                         params.append(key, filters[key]);
@@ -107,9 +107,11 @@ export default function Catalog() {
                 </div>
                 <div className="w-1/2 p-4 overflow-y-auto">
                     {
-                        selectedRoom ?
-                            <RoomListing roomID={selectedRoom} />
-                        : <h3 className="text-xl text-center text-gray-400">Room not selected</h3>
+                        selectedRoom 
+                        ? <RoomListing roomID={selectedRoom} />
+                        : <div className="flex items-center justify-center h-full">
+                            <h3 className="text-xl text-center text-gray-400">Room not selected</h3>
+                        </div>
                     }
                 </div>
             </div>

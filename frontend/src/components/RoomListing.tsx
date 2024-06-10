@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Schedule from "./Schedule";
 
 interface RoomListingProps {
     roomID: number;
@@ -32,11 +33,11 @@ export default function RoomListing({ roomID }: RoomListingProps) {
         <div className="p-4">
             { !roomListingLoading ?
                 <>
-                    <h1 className="text-3xl font-bold">{roomData.room_name_display.split(",")[0]}</h1>
-                    <h3 className="text-lg">Room {roomData.room_number}</h3>
+                    <h1 className="text-3xl font-bold">{roomData.display_name.split(",")[0]}</h1>
+                    <h3 className="text-lg">Room {roomData.number}</h3>
                     <div>
                         <h2 className="text-2xl font-bold mt-4">Features</h2>
-                        <p className="text-lg">Capacity {roomData.room_capacity}</p>
+                        <p className="text-lg">Capacity {roomData.capacity}</p>
                         <br />
                         {
                             roomData.room_features.map((item, index) => (
@@ -45,7 +46,7 @@ export default function RoomListing({ roomID }: RoomListingProps) {
                         }
                     </div>
                     <h2 className="text-2xl font-bold mt-4">Schedule</h2>
-                    
+                    <Schedule events={[]} />
                 </>
                 : <></>
             }
