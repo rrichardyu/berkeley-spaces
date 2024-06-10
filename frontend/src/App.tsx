@@ -3,6 +3,7 @@ import './App.css'
 import Catalog from './pages/Catalog'
 import Scheduler from './pages/Scheduler'
 import NavigationBar from './components/NavigationBar'
+import Home from './pages/Home'
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
         <NavigationBar />
         <div className="flex-grow overflow-hidden">
           <Routes>
+            <Route path="/" element={<Home />} />
             <Route path="/catalog" element={<Catalog />} />
             <Route path="/scheduler" element={<Scheduler />} />
           </Routes>
