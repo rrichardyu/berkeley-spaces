@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Preferences from "./components/Preferences";
+import Preferences from "../components/Preferences";
 
 export default function Scheduler() {
     const [preferences, setPreferences] = useState(null);

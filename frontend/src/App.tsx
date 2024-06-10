@@ -1,11 +1,15 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
+import Catalog from './pages/Catalog'
+import Scheduler from './pages/Scheduler'
 
-function App() {
+export default function App() {
   return (
-    <>
-      <h1>Welcome!</h1>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/catalog" element={<Catalog />} />
+        <Route path="/scheduler" element={<Scheduler />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
-
-export default App

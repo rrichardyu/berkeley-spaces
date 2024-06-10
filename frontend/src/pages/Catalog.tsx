@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Filters from "./components/Filters";
-import Room from "./components/Room";
-import RoomListing from "./components/RoomListing";
+import Filters from "../components/Filters";
+import Room from "../components/Room";
+import RoomListing from "../components/RoomListing";
 
 export default function Catalog() {
     const [allRoomsData, setAllRoomsData] = useState(null);
