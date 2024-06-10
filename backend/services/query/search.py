@@ -97,10 +97,16 @@ def search(session, start_t=None, end_t=None, date=None, buildings=None, categor
                 open_rooms_cte.c.id == Schedule.room_id,
                 Schedule.event_date == current_date,
                 current_time.between(Schedule.start_t, Schedule.end_t)
-            )).cte('ReservedRooms')
+            )).distinct().cte('ReservedRooms')
 
 
     query = session.query(reserved_rooms_cte)
+
+    if start_t and end_t:
+        query = query.filter(or_(
+            reserved_rooms_cte.c.reservation_status == 'Unreserved',
+            reserved_rooms_cte.c.reservation_status == 'Reserved'
+        ))
 
     if status:
         query = query.filter(reserved_rooms_cte.c.reservation_status == status)
