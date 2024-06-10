@@ -6,7 +6,12 @@ interface RoomListingProps {
 }
 
 export default function RoomListing({ roomID }: RoomListingProps) {
-    const [roomData, setRoomData] = useState(null);
+    const [roomData, setRoomData] = useState({
+        number: 0,
+        display_name: "",
+        capacity: 0,
+        room_features: []
+    });
     const [roomListingLoading, setRoomListingLoading] = useState(true);
 
     useEffect(() => {
@@ -40,7 +45,7 @@ export default function RoomListing({ roomID }: RoomListingProps) {
                         <p className="text-lg">Capacity {roomData.capacity}</p>
                         <br />
                         {
-                            roomData.room_features.map((item, index) => (
+                            roomData.room_features.map((item) => (
                                 <p className="text-lg">{item}</p>
                             ))
                         }

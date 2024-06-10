@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 interface CalendarProps {
-    onDateClick: (date: string) => void;
+    onDateClick: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Calendar: React.FC<CalendarProps> = ({ onDateClick }) => {

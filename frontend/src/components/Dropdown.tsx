@@ -3,14 +3,14 @@ import { useState, useEffect, useRef } from "react";
 interface DropdownProps {
     dropdownText: string;
     options: { display: string, value: string }[];
-    selectDropdownItem: (selectedItem: string | string[]) => void;
+    selectDropdownItem: React.Dispatch<React.SetStateAction<string[]>>;
     allowMultipleSelect?: boolean;
 }
 
 export default function Dropdown({ dropdownText, options, selectDropdownItem, allowMultipleSelect }: DropdownProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedDropdownItems, setSelectedDropdownItems] = useState<string[]>([]);
-    const dropdownRef = useRef(null);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -35,10 +35,10 @@ export default function Dropdown({ dropdownText, options, selectDropdownItem, al
                 ? selectedDropdownItems.filter(item => item !== value)
                 : [...selectedDropdownItems, value];
             setSelectedDropdownItems(updatedSelectedItems);
-            selectDropdownItem(updatedSelectedItems.map(item => options.find(option => option.display === item)?.value));
+            selectDropdownItem(updatedSelectedItems.map(item => options.find(option => option.display === item)?.value).filter(Boolean) as string[]);
         } else {
             setSelectedDropdownItems([value]);
-            selectDropdownItem(options.find(option => option.display === value)?.value || ''); // Added null check here
+            selectDropdownItem([options.find(option => option.display === value)?.value || '']);
             setIsOpen(false);
         }
     };

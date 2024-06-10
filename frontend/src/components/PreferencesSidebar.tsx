@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Calendar from "./Calendar";
 import Dropdown from "./Dropdown";
+import type { Preferences } from "../types/Types";
 
 function convertDateToString(dateObject: Date) {
     const year = dateObject.getFullYear();
@@ -10,13 +11,22 @@ function convertDateToString(dateObject: Date) {
     return `${year}-${month}-${day}`;
 }
 
-export default function Preferences({ availablePreferences, preferenceUpdate }) {
-    const [start_t, setStartTime] = useState("")
-    const [end_t, setEndTime] = useState("")
+interface PreferencesProps {
+    availablePreferences: {
+        buildings: { display_name: string, internal_name: string }[],
+        features: { display_name: string, internal_name: string }[],
+        categories: { display_name: string, internal_name: string }[]
+    },
+    preferenceUpdate: (preferences: Preferences) => void
+}
+
+export default function Preferences({ availablePreferences, preferenceUpdate }: PreferencesProps) {
+    const [start_t, setStartTime] = useState<string[]>([])
+    const [end_t, setEndTime] = useState<string[]>([])
     const [date, setDate] = useState(convertDateToString(new Date()));
-    const [buildings, setBuildings] = useState([])
-    const [features, setFeatures] = useState([])
-    const [categories, setCategories] = useState([])
+    const [buildings, setBuildings] = useState<string[]>([])
+    const [features, setFeatures] = useState<string[]>([])
+    const [categories, setCategories] = useState<string[]>([])
 
     const times = Array.from({ length: 24 }, (_, i) => {
         const hour = i % 12 || 12;

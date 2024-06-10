@@ -1,10 +1,10 @@
 import { useState } from "react";
 
 interface Event {
+  startHour: number;
+  endHour: number;
   id: string;
   title: string;
-  startTime: string;
-  endTime: string;
 }
 
 interface HourlyScheduleProps {
@@ -33,7 +33,7 @@ export default function Schedule({ events }: HourlyScheduleProps) {
           rows.push(
             <div key={i} className="grid grid-cols-2 gap-4 border-b border-gray-200">
               <div className="text-right">{hour}</div>
-              <div className="">{renderEventsForHour(i)}</div>
+              {/* <div className="">{renderEventsForHour(i)}</div> */}
             </div>
           );
         }
@@ -67,6 +67,7 @@ export default function Schedule({ events }: HourlyScheduleProps) {
             </div>
             {/* Left side with hours */}
             {renderHourRows()}
+            {renderEventsForHour(0)}
           </div>
           <div className="col-span-2">
             {/* Right side for events */}

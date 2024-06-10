@@ -1,10 +1,26 @@
 import { useEffect, useState } from "react";
-import Preferences from "../components/Preferences";
+import PreferencesSidebar from "../components/PreferencesSidebar";
+import type { Preferences } from "../types/Types";
 
 export default function Scheduler() {
-    const [preferences, setPreferences] = useState(null);
-    const [availablePreferences, setAvailablePreferences] = useState(null);
+    const [preferences, setPreferences] = useState<Preferences>({
+        start_t: [],
+        end_t: [],
+        date: "",
+        buildings: [],
+        features: [],
+        categories: []
+    });
+    const [availablePreferences, setAvailablePreferences] = useState({
+        start_t: [],
+        end_t: [],
+        date: "",
+        buildings: [],
+        features: [],
+        categories: []
+    });
     const [preferencesLoaded, setPreferencesLoaded] = useState(false);
+
     const [sequentialSearchData, setSequentialSearchData] = useState(null);
     const [sequentialSearchDataLoaded, setSequentialSearchDataLoaded] = useState(false);
 
@@ -22,13 +38,13 @@ export default function Scheduler() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                let params = new URLSearchParams();
+                const params = new URLSearchParams();
 
-                for(let key in preferences) {
+                for (const key in preferences) {
                     if (Array.isArray(preferences[key])) {
-                        preferences[key].forEach(value => params.append(key, value));
+                        (preferences[key] as string[]).forEach(value => params.append(key, value));
                     } else {
-                        params.append(key, preferences[key]);
+                        params.append(key, (preferences[key] as string));
                     }
                 }
 
@@ -49,7 +65,7 @@ export default function Scheduler() {
         fetchData();
     }, [preferences])
 
-    const handlePreferenceUpdate = (preferences) => {
+    const handlePreferenceUpdate = (preferences: Preferences) => {
         setPreferences(preferences)
         console.log(preferences)
     }
@@ -59,7 +75,7 @@ export default function Scheduler() {
             <div className="flex h-screen">
                 <div className="w-1/4 p-4 border-r">
                     { preferencesLoaded ?
-                        <Preferences availablePreferences={availablePreferences} preferenceUpdate={handlePreferenceUpdate} />
+                        <PreferencesSidebar availablePreferences={availablePreferences} preferenceUpdate={handlePreferenceUpdate} />
                         : <></>
                     }
                 </div>

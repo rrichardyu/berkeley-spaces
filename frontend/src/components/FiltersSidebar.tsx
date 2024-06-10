@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Calendar from "./Calendar";
 import Dropdown from "./Dropdown";
+import type { Filters } from "../types/Types";
 
 function convertDateToString(dateObject: Date) {
     const year = dateObject.getFullYear();
@@ -10,23 +11,32 @@ function convertDateToString(dateObject: Date) {
     return `${year}-${month}-${day}`;
 }
 
-export default function Filters({ availableFilters, filterUpdate }) {
-    const [start_t, setStartTime] = useState("")
-    const [end_t, setEndTime] = useState("")
-    const [date, setDate] = useState(convertDateToString(new Date()));
-    const [buildings, setBuildings] = useState([])
-    const [features, setFeatures] = useState([])
-    const [categories, setCategories] = useState([])
-    const [status, setStatus] = useState("")
+interface FiltersProps {
+    availableFilters: {
+        buildings: { display_name: string, internal_name: string }[],
+        features: { display_name: string, internal_name: string }[],
+        categories: { display_name: string, internal_name: string }[]
+    },
+    filterUpdate: (filters: Filters) => void
+}
 
-    const prevFilterState = useRef({
-        start_t: "",
-        end_t: "",
+export default function Filters({ availableFilters, filterUpdate }: FiltersProps) {
+    const [start_t, setStartTime] = useState<string[]>([])
+    const [end_t, setEndTime] = useState<string[]>([])
+    const [date, setDate] = useState<string>(convertDateToString(new Date()));
+    const [buildings, setBuildings] = useState<string[]>([])
+    const [features, setFeatures] = useState<string[]>([])
+    const [categories, setCategories] = useState<string[]>([])
+    const [status, setStatus] = useState<string[]>([])
+
+    const prevFilterState = useRef<Filters>({
+        start_t: [],
+        end_t: [],
         date: date,
         buildings: [],
         features: [],
         categories: [],
-        status: ""
+        status: []
     });
 
     useEffect(() => {
@@ -72,9 +82,17 @@ export default function Filters({ availableFilters, filterUpdate }) {
         <div className="w-full">
             <h2 className="text-3xl font-bold">Filters</h2>
             <div className="flex">
-                <Dropdown dropdownText="Start" options={times.map(time => ({ display: time.display_value, value: time.internal_value }))} selectDropdownItem={setStartTime} />
+                <Dropdown 
+                    dropdownText="Start" 
+                    options={times.map(time => ({ display: time.display_value, value: time.internal_value }))} 
+                    selectDropdownItem={setStartTime} 
+                />
                 <div className="w-4"></div>
-                <Dropdown dropdownText="End" options={times.map(time => ({ display: time.display_value, value: time.internal_value }))} selectDropdownItem={setEndTime} />
+                <Dropdown 
+                    dropdownText="End" 
+                    options={times.map(time => ({ display: time.display_value, value: time.internal_value }))} 
+                    selectDropdownItem={setEndTime} 
+                />
             </div>
             <Calendar onDateClick={setDate} />
             <Dropdown 

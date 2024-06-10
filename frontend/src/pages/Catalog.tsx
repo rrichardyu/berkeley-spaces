@@ -1,16 +1,32 @@
 import { useEffect, useState } from "react";
-import Filters from "../components/Filters";
+import FiltersSidebar from "../components/FiltersSidebar";
 import Room from "../components/Room";
 import RoomListing from "../components/RoomListing";
+import { Filters } from "../types/Types";
 
 export default function Catalog() {
-    const [allRoomsData, setAllRoomsData] = useState(null);
-    const [roomSearchData, setRoomSearchData] = useState(null);
+    const [roomSearchData, setRoomSearchData] = useState([{
+        id: 0,
+        display_name: "",
+        reservation_status: ""
+    }]);
     const [catalogLoading, setCatalogLoading] = useState(true);
-    const [selectedRoom, setSelectedRoom] = useState(null);
-    const [filters, setFilters] = useState(null);
+    const [selectedRoom, setSelectedRoom] = useState(0);
+    const [filters, setFilters] = useState<Filters>({
+        start_t: [],
+        end_t: [],
+        date: "",
+        buildings: [],
+        features: [],
+        categories: [],
+        status: []
+    });
 
-    const [availableFilters, setAvailableFilters] = useState(null);
+    const [availableFilters, setAvailableFilters] = useState({
+        buildings: [],
+        features: [],
+        categories: [],
+    });
     const [filtersLoaded, setFiltersLoaded] = useState(false);
 
     // useEffect(() => {
@@ -36,13 +52,13 @@ export default function Catalog() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                let params = new URLSearchParams();
+                const params = new URLSearchParams();
 
-                for(let key in filters) {
+                for (const key in filters) {
                     if (Array.isArray(filters[key])) {
-                        filters[key].forEach(value => params.append(key, value));
+                        (filters[key] as string[]).forEach(value => params.append(key, value));
                     } else {
-                        params.append(key, filters[key]);
+                        params.append(key, (filters[key] as string));
                     }
                 }
 
@@ -76,11 +92,11 @@ export default function Catalog() {
     }, [])
 
 
-    const handleRoomSelection = (roomID) => {
+    const handleRoomSelection = (roomID: number) => {
         setSelectedRoom(roomID);
     }
 
-    const handleFilterUpdate = (filters) => {
+    const handleFilterUpdate = (filters: Filters) => {
         setFilters(filters)
         console.log(filters)
     }
@@ -90,16 +106,16 @@ export default function Catalog() {
             <div className="flex flex-grow h-full">
                 <div className="w-1/4 p-4 border-r">
                     { filtersLoaded ?
-                        <Filters availableFilters={availableFilters} filterUpdate={handleFilterUpdate} />
+                        <FiltersSidebar availableFilters={availableFilters} filterUpdate={handleFilterUpdate} />
                         : <></>
                     }
                 </div>
                 <div className="w-1/4 p-4 overflow-y-auto border-r">
                     {
                         !catalogLoading ?
-                            roomSearchData.map((item, index) => (
+                            roomSearchData.map((item) => (
                                 <div onClick={() => handleRoomSelection(item.id)}>
-                                    <Room roomID={item.id} displayName={item.display_name} status={item.reservation_status} />
+                                    <Room displayName={item.display_name} status={item.reservation_status} />
                                 </div>
                             ))
                         : <></>

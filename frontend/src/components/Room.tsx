@@ -1,10 +1,9 @@
 interface RoomProps {
-    roomID: number;
     displayName: string;
     status: string;
 }
 
-export default function Room({ roomID, displayName, status }: RoomProps) {
+export default function Room({ displayName, status }: RoomProps) {
     let statusColor = "text-gray-400";
     
     if (status === "Unreserved") {
