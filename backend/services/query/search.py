@@ -10,6 +10,7 @@ def search(session, start_t=None, end_t=None, date=None, buildings=None, categor
 
     if date:
         current_date = datetime.strptime(date, '%Y-%m-%d').date()
+        today_day_id = current_date.isoweekday()
 
     if start_t and end_t:
         if type(start_t) == str and type(end_t) == str:

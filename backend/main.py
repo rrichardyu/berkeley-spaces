@@ -54,10 +54,12 @@ async def get_room_data(room_id: int):
 
 @app.get("/sequential_rooms")
 async def get_sequential_rooms(
-    start_t: str, end_t: str,
+    start_t: str, 
+    end_t: str, 
+    date: str = None,
     buildings: Annotated[list[str] | None, Query()] = None,
     categories: Annotated[list[str] | None, Query()] = None,
     features: Annotated[list[str] | None, Query()] = None
 ):
-    output = find_sequential_rooms(session, start_t, end_t, buildings=buildings, categories=categories, features=features)
+    output = find_sequential_rooms(session, start_t, end_t, date=date, buildings=buildings, categories=categories, features=features)
     return output if output else []

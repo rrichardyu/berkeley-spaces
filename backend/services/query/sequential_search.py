@@ -42,11 +42,12 @@ def subtract_multiple_time_ranges(primary_start: datetime, primary_end: datetime
     
     return [(start, end) for start, end in current_ranges]
 
-def find_sequential_rooms(session, start_time: str, end_time: str, buildings: list[str] = None, categories: list[str] = None, features: list[str] = None) -> list[tuple[datetime, datetime, dict]] | None:
+def find_sequential_rooms(session, start_time: str, end_time: str, date: str = None, buildings: list[str] = None, categories: list[str] = None, features: list[str] = None) -> list[tuple[datetime, datetime, dict]] | None:
     custom_search = lambda start_time, end_time: search(
         session, 
         start_t=start_time, 
         end_t=end_time, 
+        date=date if date else None,
         status="Unreserved", 
         buildings=buildings, 
         categories=categories, 
@@ -86,8 +87,10 @@ def find_sequential_rooms(session, start_time: str, end_time: str, buildings: li
     output = []
     queue = Queue()
 
-    start_time = datetime.strptime(str(start_time), '%Y-%m-%d %H:%M:%S')
-    end_time = datetime.strptime(str(end_time), '%Y-%m-%d %H:%M:%S')
+    # start_time = datetime.strptime(str(start_time), '%Y-%m-%d %H:%M:%S')
+    # end_time = datetime.strptime(str(end_time), '%Y-%m-%d %H:%M:%S')
+    start_time = datetime.strptime(start_time.strip(), '%I:%M %p')
+    end_time = (datetime.strptime(end_time.strip(), '%I:%M %p') - timedelta(minutes=1))
 
     queue.put((start_time, end_time))
 
