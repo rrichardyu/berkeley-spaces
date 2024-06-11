@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import FiltersSidebar from "../components/FiltersSidebar";
-import Room from "../components/Room";
+import Room from "../components/RoomResult";
 import RoomListing from "../components/RoomListing";
 import { Filters } from "../types/Types";
 

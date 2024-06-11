@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import PreferencesSidebar from "../components/PreferencesSidebar";
 import type { Preferences } from "../types/Types";
+import SchedulerResult from "../components/SchedulerResult";
+import { RoomSchedulerResult } from "../types/Types";
 
 export default function Scheduler() {
     const [preferences, setPreferences] = useState<Preferences>({
@@ -21,7 +23,7 @@ export default function Scheduler() {
     });
     const [preferencesLoaded, setPreferencesLoaded] = useState(false);
 
-    const [sequentialSearchData, setSequentialSearchData] = useState(null);
+    const [sequentialSearchData, setSequentialSearchData] = useState<RoomSchedulerResult[]>([]);
     const [sequentialSearchDataLoaded, setSequentialSearchDataLoaded] = useState(false);
 
     useEffect(() => {
@@ -80,7 +82,7 @@ export default function Scheduler() {
                     }
                 </div>
                 <div>
-                    { sequentialSearchDataLoaded ? JSON.stringify(sequentialSearchData) : <></>}
+                    { sequentialSearchDataLoaded ? <SchedulerResult rooms={sequentialSearchData} /> : <></>}
                 </div>
             </div>
         </>

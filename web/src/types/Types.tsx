@@ -18,3 +18,13 @@ export interface Preferences {
     categories: string[];
     [key: string]: unknown;
 }
+
+export interface RoomSchedulerResult {
+    start_t: string;
+    end_t: string;
+    room: {
+        id: number;
+        display_name: string;
+        reservation_status: string;
+    };
+}
