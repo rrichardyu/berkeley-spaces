@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import FastAPI, Query
+from fastapi import BackgroundTasks, FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
@@ -76,7 +76,10 @@ def get_sequential_rooms(
     output = find_sequential_rooms(db, start_t, end_t, date=date, buildings=buildings, categories=categories, features=features)
     return output if output else []
 
-@app.get("/update_data")
-def update_data(db: Session = Depends(get_db)):
+def update_data_background(db: Session):
     update(db)
-    return {"message": "Data updated"}
+
+@app.post("/update_data")
+def update_data(background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    background_tasks.add_task(update_data_background, db)
+    return {"message": "Data update scheduled"}

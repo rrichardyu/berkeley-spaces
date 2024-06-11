@@ -4,6 +4,7 @@ import Catalog from './pages/Catalog'
 import Scheduler from './pages/Scheduler'
 import NavigationBar from './components/NavigationBar'
 import Home from './pages/Home'
+import Update from './pages/Update'
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/catalog" element={<Catalog />} />
             <Route path="/scheduler" element={<Scheduler />} />
+            <Route path="/update" element={<Update />} />
           </Routes>
         </div>
       </div>
