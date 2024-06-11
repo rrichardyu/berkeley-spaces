@@ -1,4 +1,4 @@
-from backend.models import Base
+from api.models import Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from room_update import update_classrooms

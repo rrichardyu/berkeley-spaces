@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from queue import Queue
 import random
 
-from backend.services.query.search import search
+from api.services.query.search import search
 
 def subtract_singular_time_range(start1: datetime, end1: datetime, start2: datetime, end2: datetime) -> list[tuple[datetime, datetime]]:
     result = []

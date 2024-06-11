@@ -1,4 +1,4 @@
-from backend.models import Room, Schedule, Feature, RoomFeature
+from api.models import Room, Schedule, Feature, RoomFeature
 
 def query_room(session, room_id):
     try:

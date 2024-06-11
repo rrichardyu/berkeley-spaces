@@ -1,4 +1,4 @@
-from backend.models import Room, Schedule, Hours, Category, Feature, Building
+from api.models import Room, Schedule, Hours, Category, Feature, Building
 
 def filters(session):
     buildings = session.query(Building).all()

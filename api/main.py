@@ -2,16 +2,17 @@ from typing import Annotated
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine
-from backend.services.query.query import query_room
-from backend.services.query.sequential_search import find_sequential_rooms
-from backend.services.query.search import search
-from backend.services.query.filters import filters
+from api.services.query.query import query_room
+from api.services.query.sequential_search import find_sequential_rooms
+from api.services.query.search import search
+from api.services.query.filters import filters
 from sqlalchemy.orm import sessionmaker
 
 app = FastAPI()
 
 origins = [
     "http://localhost",
+    "http://localhost:80",
     "http://localhost:5173",
     "http://localhost:4173",
 ]
@@ -24,7 +25,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-engine = create_engine("postgresql://postgres:cal@localhost:5432")
+engine = create_engine("postgresql://postgres:cal@db:5432/postgres")
 Session = sessionmaker(bind=engine)
 session = Session()
 

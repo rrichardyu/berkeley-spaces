@@ -1,7 +1,7 @@
 from sqlalchemy import and_, case, or_
 from datetime import datetime, timedelta
 from sqlalchemy import func
-from backend.models import Room, Schedule, Hours, Category, Feature, Building
+from api.models import Room, Schedule, Hours, Category, Feature, Building
 
 def search(session, start_t=None, end_t=None, date=None, buildings=None, categories=None, features=None, status=None):
     today_day_id = datetime.now().isoweekday()

@@ -1,5 +1,5 @@
 import requests
-from backend.models import Room, Building, Category, Feature
+from api.models import Room, Building, Category, Feature
 from sqlalchemy.exc import SQLAlchemyError
 
 def fetch_rooms():
