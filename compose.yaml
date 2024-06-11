@@ -25,6 +25,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: cal
       POSTGRES_DB: postgres
+      TZ: America/Los_Angeles
+      PGTZ: America/Los_Angeles
     volumes:
       - spaces_db:/var/lib/postgresql/data
     ports:
