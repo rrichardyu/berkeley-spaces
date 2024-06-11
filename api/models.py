@@ -2,8 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Date, Time
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from datetime import datetime
-
-Base = declarative_base()
+from api.database import Base
 
 class Building(Base):
     __tablename__ = "buildings"
