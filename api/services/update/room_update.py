@@ -58,6 +58,8 @@ def update_classrooms(session):
                 categories.append(existing_category)
             else:
                 new_category = Category(name=category_name)
+                session.add(new_category)
+                session.commit()
                 categories.append(new_category)
 
         features = []
@@ -67,24 +69,37 @@ def update_classrooms(session):
                 features.append(existing_feature)
             else:
                 new_feature = Feature(name=feature_name)
+                session.add(new_feature)
+                session.commit()
                 features.append(new_feature)
 
         if existing_building:
             new_building = existing_building
         else:
             new_building = Building(display_name=building_name, internal_name=building_name_internal)
+            session.add(new_building)
+            session.commit()
 
-        new_room = Room(
-            id = room_id,
-            display_name=room_name_display, 
-            number=room_number, 
-            capacity=room_capacity,
-            building=new_building,
-            categories=categories,
-            features=features
-        )
-        
-        session.add(new_room)
+        existing_room = session.query(Room).filter_by(id=room_id).first()
+
+        if existing_room:
+            existing_room.display_name = room_name_display
+            existing_room.number = room_number
+            existing_room.capacity = room_capacity
+            existing_room.building = new_building
+            existing_room.categories = categories
+            existing_room.features = features
+        else:
+            new_room = Room(
+                id=room_id,
+                display_name=room_name_display, 
+                number=room_number, 
+                capacity=room_capacity,
+                building=new_building,
+                categories=categories,
+                features=features
+            )
+            session.add(new_room)
         
     try:
         session.commit()
