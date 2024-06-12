@@ -6,9 +6,29 @@ interface CalendarProps {
 
 const Calendar: React.FC<CalendarProps> = ({ onDateClick }) => {
     const currentDate = new Date();
-    const currentMonth = currentDate.getMonth();
-    const currentYear = currentDate.getFullYear();
+    // const currentMonth = currentDate.getMonth();
+    // const currentYear = currentDate.getFullYear();
     const [selectedDate, setSelectedDate] = useState(currentDate.getDate());
+    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+    const handleNextMonth = () => {
+        if (currentMonth === 11) {
+            setCurrentMonth(0);
+            setCurrentYear(currentYear + 1);
+        } else {
+            setCurrentMonth(currentMonth + 1);
+        }
+    };
+    
+    const handlePreviousMonth = () => {
+        if (currentMonth === 0) {
+            setCurrentMonth(11);
+            setCurrentYear(currentYear - 1);
+        } else {
+            setCurrentMonth(currentMonth - 1);
+        }
+    };
 
     const getDaysInMonth = (year: number, month: number) => {
         return new Date(year, month + 1, 0).getDate();
@@ -52,14 +72,14 @@ const Calendar: React.FC<CalendarProps> = ({ onDateClick }) => {
     return (
         <div className="calendar">
             <div className="calendar-header flex justify-between items-center mb-2">
-                <h2 className="text-lg font-bold">
-                    {currentDate.toLocaleString('default', { month: 'long' })} {currentDate.getFullYear()}
-                </h2>
+            <h2 className="text-lg font-bold">
+                {new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long' })} {currentYear}
+            </h2>
                 <div className="flex">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg onClick={handlePreviousMonth} xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                     </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg onClick={handleNextMonth} xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                 </div>
