@@ -6,7 +6,7 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL=postgresql://postgres:cal@db:5432/postgres
+      DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:cal@db:5432/postgres}
     ports:
       - "8000:8000"
 
@@ -22,9 +22,9 @@ services:
   db:
     image: postgres:latest
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: cal
-      POSTGRES_DB: postgres
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cal}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
       TZ: America/Los_Angeles
       PGTZ: America/Los_Angeles
     volumes:
